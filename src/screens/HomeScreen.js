@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { View, StyleSheet, Image, TouchableOpacity, Text } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import Title from '../components/HomeScreen/Title';
 import Button from '../components/HomeScreen/Button';
@@ -17,6 +18,8 @@ export default function HomeScreen ({navigation}) {
 
 
   const [mobile, setMobile] = useState('');
+  const [service_type, setService] = useState('guest');
+  const [name, setName] = useState('')
   const [iscall, setIsCall] = useState(false);
   const [isActive, setIsActive] = useState(true);
   const [counter, setCounter] = useState(0);
@@ -30,7 +33,6 @@ export default function HomeScreen ({navigation}) {
 
     if (isActive) {
       intervalId = setInterval( async() => {
-
         if(isActive == false){
           return () => clearInterval(intervalId);
         }
@@ -66,8 +68,6 @@ export default function HomeScreen ({navigation}) {
             else{
               console.log('no call activated')
             }
-
-
           }
 
 
@@ -85,7 +85,11 @@ export default function HomeScreen ({navigation}) {
 
   const getMobile = async() => {
     const value = await AsyncStorage.getItem('@mobile')
+    const name = await AsyncStorage.getItem('@name')
+    const service = await AsyncStorage.getItem('@service_type')
     setMobile(value)
+    setService(service)
+    setName(name)
     console.log('mobile ',value);
   }
 
@@ -116,6 +120,13 @@ export default function HomeScreen ({navigation}) {
   return (
     <View style={{flex:1}}>
       <View style={{ flex: 1,}}>
+        <View style={{ flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'flex-end', paddingTop: 10, paddingRight: 10 }}>
+          <TouchableOpacity
+            onPress={_onMenuPress}
+          >
+            <AntDesign name="bars" size={32} color="#900" />
+          </TouchableOpacity>
+        </View>
         <View style={styles.header}>
           <Image
             style={{height: 140, width: 140}}
@@ -123,7 +134,7 @@ export default function HomeScreen ({navigation}) {
           />
         </View>
         <View>
-          <Title headerText={"Welcome "+ mobile + ","} description="Choose the type of service you are interested in"/>
+          <Title headerText={"Welcome "+ name + "[" + service_type + "],"} description="Choose the type of service you are interested in"/>
           <Title headerText="DISCOVER PINACALL" description="What you are looking for?"/>
           <View style={styles.row}>
             <Button iconName="phone" buttonTitle="Pin a Call" navigation={navigation}/>
@@ -137,7 +148,7 @@ export default function HomeScreen ({navigation}) {
           </View>
         </View>
         <View style={styles.row}>
-          <Text>{isActive ? second : ''}</Text>
+          {/* <Text>{isActive ? second : ''}</Text> */}
           <Text style={{marginTop: 10, marginLeft: 10}}>{!isActive ? msg : ''}</Text>
           {!isActive ?
             <TouchableOpacity onPress={joinCall} style={styles.button}>
@@ -162,7 +173,7 @@ export default function HomeScreen ({navigation}) {
 
 const styles = StyleSheet.create({
   header:{
-    paddingTop: 40,
+    paddingTop: 20,
     alignItems: 'center',
     justifyContent: 'center'
   },

@@ -18,6 +18,7 @@ import {
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { COLORS } from '../assets/utils/colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function DrawerContent(props) {
 
@@ -114,14 +115,14 @@ export function DrawerContent(props) {
                             />
                         </Drawer.Section>
                         <Drawer.Section title="Preferences" style={{color: COLORS.placeholder}}>
-                            <TouchableRipple onPress={() => {toggleTheme()}}>
+                            {/* <TouchableRipple onPress={() => {}}>
                                 <View style={styles.preference}>
                                     <Text style={{color: COLORS.placeholder, fontWeight: '700'}}>Host mode</Text>
                                     <View pointerEvents="none">
                                         <Switch value={paperTheme.dark}/>
                                     </View>
                                 </View>
-                            </TouchableRipple>
+                            </TouchableRipple> */}
                         </Drawer.Section>
                     </View>
                 </DrawerContentScrollView>
@@ -136,7 +137,10 @@ export function DrawerContent(props) {
                         )}
                         label="Sign Out"
                         labelStyle={{color: COLORS.placeholder, fontWeight: '700'}}
-                        onPress={() => {props.navigation.navigate('Signin')}}
+                        onPress={async() => {
+                            await AsyncStorage.removeItem('@mobile');
+                            props.navigation.navigate('Signin')
+                        }}
                     />
                 </Drawer.Section>
         </View>

@@ -7,6 +7,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS } from '../assets/utils/colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const screen = Dimensions.get("screen");
 const WIDTH = screen.width;
@@ -56,10 +57,19 @@ const SignUp = ({ navigation }) => {
           }
       );
       let responseJson = await response.json();
-      console.log('response',responseJson.status)
+      console.log('response',responseJson)
       //if success login user
-      if(responseJson.status == '200'){
-        alert('success')
+      if(responseJson[0].status == 200){
+        Alert.alert(
+          'Pinacall',
+          'Welcome to Pinacall'
+        );
+        await AsyncStorage.setItem('@mobile', mobile);
+        await AsyncStorage.setItem('@name', name);
+        if(checked) await AsyncStorage.setItem('@service_type', 'host');
+        else await AsyncStorage.setItem('@service_type', 'guest');
+
+        navigation.navigate('Root', { screen: 'Home' });
       }
       else{
         Alert.alert(

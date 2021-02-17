@@ -11,6 +11,7 @@ import ForgotPassword from './src/screens/ForgotPassword';
 import HomeScreen from './src/screens/HomeScreen';
 import QueryScreen from './src/screens/QueryScreen';
 import MapScreen from './src/screens/MapScreen';
+import SplashScreen from './src/screens/SplashScreen'
 
 import { DrawerContent } from './src/components/DrawerContent';
 
@@ -18,7 +19,7 @@ const Drawer = createDrawerNavigator();
 
 function rootDrawer(){
   return(
-    <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />} screenOptions={{headerShown: false,}}>
+    <Drawer.Navigator initialRouteName="Home" drawerContent={props => <DrawerContent {...props} />} screenOptions={{headerShown: false,}}>
       <Drawer.Screen name="Home" component={HomeScreen} />
       <Drawer.Screen name="Query" component={QueryScreen} />
       <Drawer.Screen name="Map" component={MapScreen} />
@@ -33,7 +34,8 @@ const Stack = createStackNavigator();
 function Route() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Signin" >
+      <Stack.Navigator initialRouteName="Splash" >
+        <Stack.Screen name="Splash" component={SplashScreen} options={{headerShown: false,}}/>
         <Stack.Screen name="SignUp" component={SignUp} options={{headerShown: false,}}/>
         <Stack.Screen name="Root" component={rootDrawer} options={{headerShown: false,}}/>
         <Stack.Screen name="Signin" component={Signin} options={{headerShown: false,}}/>

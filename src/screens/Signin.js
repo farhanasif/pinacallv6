@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {useState} from 'react';
 import { StyleSheet, Text, View,Image, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { Input, Button } from 'react-native-elements';
@@ -15,7 +15,66 @@ const screen = Dimensions.get("screen");
 const WIDTH = screen.width;
 
 const Signin = ({ navigation }) => {
+  const [password, setPassword] = useState('');
   const [mobile, setMobile] = useState('');
+
+  const ref_password = useRef()
+  const ref_mobile = useRef()
+
+  useEffect(() => {
+    const getdata = async() => {
+      const value = await AsyncStorage.getItem('@mobile')
+      if(value && value !== ''){
+        navigation.navigate('Root', { screen: 'Home' });
+      }
+      else{
+        navigation.navigate('Signin');
+      }
+    }
+
+    getdata()
+  }, [])
+
+  const _signin = async() => {
+    //alert('success')
+    if(mobile == ''){
+      alert('enter mobile');
+    }
+    else{
+      //fetch data
+      let response = await fetch(
+        'http://103.108.144.246/pinacallapi/process.php',
+          {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                  mobile: mobile,
+                  password: password,
+                  action: 'signin'
+              }),
+          }
+      );
+      let responseJson = await response.json();
+      console.log('response',responseJson)
+      //if success login user
+      if(responseJson.length > 0){
+        await AsyncStorage.setItem('@mobile', responseJson[0].phone_no);
+        await AsyncStorage.setItem('@name', responseJson[0].firstname);
+        await AsyncStorage.setItem('@service_type', responseJson[0].servicetype);
+        navigation.navigate('Root', { screen: 'Home' });
+      }
+      else{
+        Alert.alert(
+          'Pinacall',
+          'Mobile or password not matched.'
+        );
+      }
+
+    }
+
+  }
 
   return (
     <View style={styles.container}>
@@ -33,6 +92,10 @@ const Signin = ({ navigation }) => {
                 underlineColorAndroid={COLORS.pinacall_pink}
                 onChangeText={text => setMobile(text)}
                 defaultValue={mobile}
+                keyboardType='number-pad'
+                returnKeyType="next"
+                onSubmitEditing={() => ref_password.current.focus()}
+                ref={ref_mobile}
             />
         </View>
         <View style={styles.searchSection}>
@@ -42,6 +105,10 @@ const Signin = ({ navigation }) => {
                 secureTextEntry={true}
                 placeholder="PASSWORD"
                 underlineColorAndroid={COLORS.pinacall_pink}
+                onChangeText={password => setPassword(password)}
+                defaultValue={password}
+                secureTextEntry={true}
+                ref={ref_password}
             />
         </View>
         <Button
@@ -61,17 +128,7 @@ const Signin = ({ navigation }) => {
             end: { x: 1, y: 0.5 },
           }}
           buttonStyle={{marginTop: 20,}}
-          onPress={async() => {
-            //alert('success')
-            if(mobile == ''){
-              alert('enter mobile');
-            }
-            else{
-              await AsyncStorage.setItem('@mobile', mobile);
-              navigation.navigate('Root', { screen: 'Home' });
-            }
-
-          }}
+          onPress={_signin}
         />
         <Button
           title="Sign In With Gmail"
