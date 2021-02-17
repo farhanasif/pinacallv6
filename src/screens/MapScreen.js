@@ -88,7 +88,7 @@ export default function MapScreen ({ navigation }) {
     }
 
     const _callUsers = () => {
-      //navigation.navigate('Video')
+      navigation.navigate('CallHome')
     }
 
     return (

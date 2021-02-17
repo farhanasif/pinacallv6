@@ -26,7 +26,7 @@ export default function HomeScreen ({navigation}) {
   const [second, setSecond] = useState('00');
   const [call_id, setCall] = useState(0);
 
-  const [msg, setmsg] = useState('A user requested for a call...')
+  const [msg, setmsg] = useState('A Guest requested for a call...')
 
   useEffect(() => {
     let intervalId;
@@ -42,7 +42,7 @@ export default function HomeScreen ({navigation}) {
           const computedSecond = String(secondCounter).length === 1 ? `0${secondCounter}`: secondCounter;
           setSecond(computedSecond);
 
-          if(mobile == '01717428261'){
+          if(service_type == 'host'){
             let response = await fetch(
               'http://103.108.144.246/pinacallapi/process.php',
                 {
@@ -58,7 +58,7 @@ export default function HomeScreen ({navigation}) {
             );
 
               let responseJson = await response.json();
-              console.log(responseJson);
+              console.log('response',responseJson);
             if(responseJson.length > 0){
               if(responseJson[0].status == 0 && responseJson[0].sender_mobile !== ''){
                 setIsActive(false);
@@ -68,6 +68,9 @@ export default function HomeScreen ({navigation}) {
             else{
               console.log('no call activated')
             }
+          }
+          else{
+            setIsActive(false)
           }
 
 
@@ -115,6 +118,7 @@ export default function HomeScreen ({navigation}) {
     // setIsActive(true);
     // setCall(0)
     // navigation.navigate('JoinCall')
+
   }
 
   return (
