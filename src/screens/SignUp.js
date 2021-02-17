@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { StyleSheet, Text, View,Image, TouchableOpacity, TextInput } from 'react-native';
-import { Input, Button } from 'react-native-elements';
+import React, {useState, useRef} from 'react';
+import { StyleSheet, Text, View,Image, TouchableOpacity,Alert, TextInput } from 'react-native';
+import { Input, Button, CheckBox } from 'react-native-elements';
 import { Dimensions } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -12,6 +12,65 @@ const screen = Dimensions.get("screen");
 const WIDTH = screen.width;
 
 const SignUp = ({ navigation }) => {
+  const [checked, setChecked] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmpass, setConfirmpass] = useState('');
+  const [mobile, setMobile] = useState('');
+
+  //using ref for enter key press handle in React
+  const ref_name = useRef()
+  const ref_email = useRef()
+  const ref_password = useRef()
+  const ref_confirm = useRef()
+  const ref_mobile = useRef()
+
+
+
+  const updateCheck = () => {
+    setChecked(!checked);
+  }
+
+  const signUp = async() => {
+    if(mobile == '' || password == '' || name == '' || password !== confirmpass){
+      alert('Please fill up all the inputs correctly')
+    }
+    else{
+      //fetch signup data
+      let response = await fetch(
+        'http://103.108.144.246/pinacallapi/process.php',
+          {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                  mobile: mobile,
+                  password: password,
+                  name: name,
+                  email: email,
+                  checked: checked,
+                  action: 'signup'
+              }),
+          }
+      );
+      let responseJson = await response.json();
+      console.log('response',responseJson.status)
+      //if success login user
+      if(responseJson.status == '200'){
+        alert('success')
+      }
+      else{
+        Alert.alert(
+          'Pinacall',
+          'User already exists'
+        );
+      }
+
+    }
+  }
+
   return (
     <View style={styles.container}>
       <Image
@@ -26,6 +85,12 @@ const SignUp = ({ navigation }) => {
                 style={styles.input}
                 placeholder="Your Name"
                 underlineColorAndroid={COLORS.pinacall_pink}
+                onChangeText={name => setName(name)}
+                defaultValue={name}
+                autoFocus={true}
+                returnKeyType="next"
+                onSubmitEditing={() => ref_email.current.focus()}
+                ref={ref_name}
             />
         </View>
         <View style={styles.searchSection}>
@@ -34,6 +99,11 @@ const SignUp = ({ navigation }) => {
                 style={styles.input}
                 placeholder="Email"
                 underlineColorAndroid={COLORS.pinacall_pink}
+                onChangeText={email => setEmail(email)}
+                defaultValue={email}
+                returnKeyType="next"
+                onSubmitEditing={() => ref_password.current.focus()}
+                ref={ref_email}
             />
         </View>
         <View style={styles.searchSection}>
@@ -42,6 +112,12 @@ const SignUp = ({ navigation }) => {
                 style={styles.input}
                 placeholder="Password"
                 underlineColorAndroid={COLORS.pinacall_pink}
+                onChangeText={password => setPassword(password)}
+                defaultValue={password}
+                secureTextEntry={true}
+                returnKeyType="next"
+                onSubmitEditing={() => ref_confirm.current.focus()}
+                ref={ref_password}
             />
         </View>
         <View style={styles.searchSection}>
@@ -50,6 +126,12 @@ const SignUp = ({ navigation }) => {
                 style={styles.input}
                 placeholder="Confirm password"
                 underlineColorAndroid={COLORS.pinacall_pink}
+                onChangeText={confirmpass => setConfirmpass(confirmpass)}
+                defaultValue={confirmpass}
+                secureTextEntry={true}
+                returnKeyType="next"
+                onSubmitEditing={() => ref_mobile.current.focus()}
+                ref={ref_confirm}
             />
         </View>
         <View style={styles.searchSection}>
@@ -58,8 +140,24 @@ const SignUp = ({ navigation }) => {
                 style={styles.input}
                 placeholder="Mobile"
                 underlineColorAndroid={COLORS.pinacall_pink}
+                onChangeText={mobile => setMobile(mobile)}
+                defaultValue={mobile}
+                keyboardType='number-pad'
+                ref={ref_mobile}
             />
         </View>
+
+        <CheckBox
+            title='sign up as host'
+            checked={checked}
+            onPress={updateCheck}
+            textStyle={{ color: COLORS.pinacall_pink }}
+            containerStyle={{ backgroundColor: COLORS.white }}
+            checkedColor={COLORS.pinacall_pink}
+            style={{ backgroundColor: COLORS.white, borderColor: COLORS.white }}
+        />
+
+
 
         <Button
           title="Create Account"
@@ -78,9 +176,10 @@ const SignUp = ({ navigation }) => {
             start: { x: 0, y: 0.5 },
             end: { x: 1, y: 0.5 },
           }}
+          onPress={signUp}
         />
         <Button
-          title="Use Gamil Account"
+          title="Use Gmail Account"
           icon={
             <MaterialCommunityIcons
               name="gmail"
@@ -116,8 +215,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   image: {
-    width: 260,
-    height: 250,
+    width: 220,
+    height: 210,
     marginTop: 0,
     alignSelf: "center"
   },

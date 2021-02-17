@@ -55,12 +55,18 @@ export default function HomeScreen ({navigation}) {
                 }
             );
 
-            let responseJson = await response.json();
-            console.log(responseJson[0].sender_mobile);
-            if(responseJson[0].status == 0 && responseJson[0].sender_mobile !== ''){
-              setIsActive(false);
-              setCall(responseJson[0].id)
+              let responseJson = await response.json();
+              console.log(responseJson);
+            if(responseJson.length > 0){
+              if(responseJson[0].status == 0 && responseJson[0].sender_mobile !== ''){
+                setIsActive(false);
+                setCall(responseJson[0].id)
+              }
             }
+            else{
+              console.log('no call activated')
+            }
+
 
           }
 
