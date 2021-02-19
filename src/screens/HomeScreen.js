@@ -25,6 +25,8 @@ export default function HomeScreen ({navigation}) {
   const [counter, setCounter] = useState(0);
   const [second, setSecond] = useState('00');
   const [call_id, setCall] = useState(0);
+  const [sender_mobile, setSender] = useState('')
+  const [isjoin, setIsjoin] = useState(0);
 
   const [msg, setmsg] = useState('A Guest requested for a call...')
 
@@ -37,12 +39,11 @@ export default function HomeScreen ({navigation}) {
           return () => clearInterval(intervalId);
         }
         else{
-          console.log(counter)
-          const secondCounter = counter;
-          const computedSecond = String(secondCounter).length === 1 ? `0${secondCounter}`: secondCounter;
-          setSecond(computedSecond);
+          console.log('enterting counter',counter)
+          console.log('service type', service_type)
 
           if(service_type == 'host'){
+            console.log('requesting for host')
             let response = await fetch(
               'http://103.108.144.246/pinacallapi/process.php',
                 {
@@ -57,12 +58,15 @@ export default function HomeScreen ({navigation}) {
                 }
             );
 
-              let responseJson = await response.json();
-              console.log('response',responseJson);
+            let responseJson = await response.json();
+            console.log('response',responseJson);
             if(responseJson.length > 0){
-              if(responseJson[0].status == 0 && responseJson[0].sender_mobile !== ''){
+              if(responseJson[0].status == "0" && responseJson[0].sender_mobile !== ''){
                 setIsActive(false);
                 setCall(responseJson[0].id)
+                setSender(responseJson[0].sender_mobile)
+                setIsjoin(1)
+                console.log('guest ', responseJson[0].id)
               }
             }
             else{
@@ -70,12 +74,12 @@ export default function HomeScreen ({navigation}) {
             }
           }
           else{
-            setIsActive(false)
+            //setIsActive(false)
           }
 
 
 
-          console.log('counter', counter)
+          console.log('counter -- ', counter)
         }
 
         setCounter(counter => counter + 1);
@@ -100,24 +104,26 @@ export default function HomeScreen ({navigation}) {
 
   const joinCall = async() => {
 
-    // let response = await fetch(
-    //   'http://103.108.144.246/pinacallapi/process.php',
-    //     {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify({
-    //             mobile: mobile,
-    //             id: call_id,
-    //             action: 'updateJoiningCall'
-    //         }),
-    //     }
-    // );
+    let response = await fetch(
+      'http://103.108.144.246/pinacallapi/process.php',
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                mobile: mobile,
+                id: call_id,
+                action: 'updateJoiningCall'
+            }),
+        }
+    );
 
-    // setIsActive(true);
-    // setCall(0)
-    // navigation.navigate('JoinCall')
+    setIsActive(true);
+    setCall(0)
+    navigation.navigate('VideoCall', {
+      mobile: sender_mobile,
+    });
 
   }
 
@@ -153,11 +159,11 @@ export default function HomeScreen ({navigation}) {
         </View>
         <View style={styles.row}>
           {/* <Text>{isActive ? second : ''}</Text> */}
-          <Text style={{marginTop: 10, marginLeft: 10}}>{!isActive ? msg : ''}</Text>
-          {!isActive ?
+          <Text style={{marginTop: 10, marginLeft: 10}}>{isjoin == 1 ? msg : ''}</Text>
+          {isjoin == 1 ?
             <TouchableOpacity onPress={joinCall} style={styles.button}>
                 <Text style={styles.buttonText}> Join Call </Text>
-            </TouchableOpacity> : <View></View>}
+            </TouchableOpacity> : <View></View> }
         </View>
       </View>
       {/* <View style={{ position : 'absolute', bottom: 0, right: 0}}>

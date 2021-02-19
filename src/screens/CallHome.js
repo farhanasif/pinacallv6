@@ -9,8 +9,10 @@ const CallHome = ({navigation}) => {
     const [update, setUpdate] = useState('')
     const [mobile, setMobile] = useState('')
     const [counter, setCounter] = useState(0);
-    const [isActive, setIsActive] = useState(true);
+    const [isActive, setIsActive] = useState(false);
     const [service_type, setService] = useState('guest');
+    const [isclick, setIsClick] = useState(0);
+
 
     useEffect(() => {
         const getdata = async() => {
@@ -19,7 +21,66 @@ const CallHome = ({navigation}) => {
         }
 
         getdata()
-      }, [])
+    }, [])
+
+    useEffect(() => {
+    let intervalId;
+
+    if (isActive) {
+      intervalId = setInterval( async() => {
+        console.log('isactive', isActive)
+        if(isActive == false){
+          return () => clearInterval(intervalId);
+        }
+        else{
+          console.log('guest',counter)
+
+          if(service_type == 'guest'){
+            let response = await fetch(
+              'http://103.108.144.246/pinacallapi/process.php',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        mobile: mobile,
+                        action: 'getnotifyForCallGuest'
+                    }),
+                }
+            );
+
+            let responseJson = await response.json();
+            console.log('guest response',responseJson);
+            if(responseJson.length > 0){
+              if(responseJson[0].receiver_mobile == '' || responseJson[0].receiver_mobile == undefined){}
+              else{
+                console.log('setting inactive to false')
+                setIsActive(false)
+                setMsg('One host joined the call. Initiating video call')
+                navigation.navigate('VideoCall', {
+                  mobile: mobile,
+                });
+                return () => clearInterval(intervalId);
+              }
+            }
+            else{
+
+                console.log('no call activated')
+            }
+          }
+
+
+
+          console.log('guest counter', counter)
+        }
+
+        setCounter(counter => counter + 1);
+      }, 3000)
+    }
+
+    return () => clearInterval(intervalId);
+  }, [isActive, counter])
 
     const _callVoice = () => {
         Alert.alert(
@@ -29,8 +90,11 @@ const CallHome = ({navigation}) => {
     }
 
     const _callVideo = async() => {
-        setMsg('Initiating Video Call.....')
-        let response = await fetch(
+
+        setIsClick(1);
+        if(isclick == 0){
+          setMsg('Initiating Video Call.....')
+          let response = await fetch(
             'http://103.108.144.246/pinacallapi/process.php',
               {
                   method: 'POST',
@@ -48,49 +112,9 @@ const CallHome = ({navigation}) => {
           setMsg('Call Initiated. Waiting for host to connect...')
 
           //setting a timer to get receiver mobile
-          intervalId = setInterval( async() => {
-            if(isActive == false){
-              return () => clearInterval(intervalId);
-            }
-            else{
-              console.log('guest',counter)
+          setIsActive(true)
+        }
 
-              if(service_type == 'guest'){
-                let response = await fetch(
-                  'http://103.108.144.246/pinacallapi/process.php',
-                    {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            mobile: mobile,
-                            action: 'getnotifyForCallGuest'
-                        }),
-                    }
-                );
-
-                let responseJson = await response.json();
-                console.log('guest response',responseJson);
-                if(responseJson.length > 0){
-                  if(responseJson[0].status == 0 && responseJson[0].receiver_mobile !== ''){
-                    setIsActive(false);
-                    setMsg('One host joined the call. Initiating video call')
-                  }
-                }
-                else{
-
-                    console.log('no call activated')
-                }
-              }
-
-
-
-              console.log('guest counter', counter)
-            }
-
-            setCounter(counter => counter + 1);
-          }, 3000)
     }
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
