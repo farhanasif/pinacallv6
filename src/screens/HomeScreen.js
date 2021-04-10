@@ -144,7 +144,7 @@ export default function HomeScreen ({navigation}) {
           />
         </View>
         <View>
-          <Title headerText={"Welcome "+ name + "[" + service_type + "],"} description="Choose the type of service you are interested in"/>
+          <Title headerText={"Welcome "+ name + ","} description="Choose the type of service you are interested in"/>
           <Title headerText="DISCOVER PINACALL" description="What you are looking for?"/>
           <View style={styles.row}>
             <Button iconName="phone" buttonTitle="Pin a Call" navigation={navigation}/>
