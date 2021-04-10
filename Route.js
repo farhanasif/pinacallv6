@@ -14,6 +14,7 @@ import MapScreen from './src/screens/MapScreen';
 import SplashScreen from './src/screens/SplashScreen'
 import CallHome from './src/screens/CallHome'
 import VideoCall from './src/screens/VideoCall'
+import OtpScreen from './src/screens/OtpScreen'
 
 import { DrawerContent } from './src/components/DrawerContent';
 
@@ -44,6 +45,7 @@ function Route() {
         <Stack.Screen name="Root" component={rootDrawer} options={{headerShown: false,}}/>
         <Stack.Screen name="Signin" component={Signin} options={{headerShown: false,}}/>
         <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+        <Stack.Screen name="OTP" component={OtpScreen} options={{ headerShown: false,}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

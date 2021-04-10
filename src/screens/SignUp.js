@@ -157,7 +157,7 @@ const SignUp = ({ navigation }) => {
             />
         </View>
 
-        <CheckBox
+        {/* <CheckBox
             title='sign up as host'
             checked={checked}
             onPress={updateCheck}
@@ -165,7 +165,7 @@ const SignUp = ({ navigation }) => {
             containerStyle={{ backgroundColor: COLORS.white }}
             checkedColor={COLORS.pinacall_pink}
             style={{ backgroundColor: COLORS.white, borderColor: COLORS.white }}
-        />
+        /> */}
 
 
 

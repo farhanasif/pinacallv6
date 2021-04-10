@@ -42,6 +42,10 @@ const Signin = ({ navigation }) => {
     }
     else{
       //fetch data
+      let otp_value =  await Math.floor(1000 + Math.random() * 9000);
+      let otp_message =  await otp_value+" is your one-time password for Pinacall."
+      console.log(otp_message)
+
       let response = await fetch(
         'http://103.108.144.246/pinacallapi/process.php',
           {
@@ -52,6 +56,8 @@ const Signin = ({ navigation }) => {
               body: JSON.stringify({
                   mobile: mobile,
                   password: password,
+                  otp_value: otp_value,
+                  otp_message: otp_message,
                   action: 'signin'
               }),
           }
@@ -60,10 +66,15 @@ const Signin = ({ navigation }) => {
       console.log('response',responseJson)
       //if success login user
       if(responseJson.length > 0){
-        await AsyncStorage.setItem('@mobile', responseJson[0].phone_no);
-        await AsyncStorage.setItem('@name', responseJson[0].firstname);
-        await AsyncStorage.setItem('@service_type', responseJson[0].servicetype);
-        navigation.navigate('Root', { screen: 'Home' });
+        // await AsyncStorage.setItem('@mobile', responseJson[0].phone_no);
+        // await AsyncStorage.setItem('@name', responseJson[0].firstname);
+        // await AsyncStorage.setItem('@service_type', responseJson[0].servicetype);
+        navigation.navigate('OTP', {
+          otp_val: otp_value,
+          phone_no: responseJson[0].phone_no,
+          name: responseJson[0].firstname,
+          service_type: responseJson[0].servicetype
+        });
       }
       else{
         Alert.alert(
