@@ -5,6 +5,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 
 import Title from '../components/HomeScreen/Title';
 import Button from '../components/HomeScreen/Button';
+import BASE_URL from '../assets/utils/url';
 
 const MySVGSize = 160;
 const MenuSize = 24;
@@ -30,64 +31,64 @@ export default function HomeScreen ({navigation}) {
 
   const [msg, setmsg] = useState('A Guest requested for a call...')
 
-  useEffect(() => {
-    let intervalId;
+  // useEffect(() => {
+  //   let intervalId;
 
-    if (isActive) {
-      intervalId = setInterval( async() => {
-        if(isActive == false){
-          return () => clearInterval(intervalId);
-        }
-        else{
-          console.log('enterting counter',counter)
-          console.log('service type', service_type)
+  //   if (isActive) {
+  //     intervalId = setInterval( async() => {
+  //       if(isActive == false){
+  //         return () => clearInterval(intervalId);
+  //       }
+  //       else{
+  //         console.log('enterting counter',counter)
+  //         console.log('service type', service_type)
 
-          if(service_type == 'host'){
-            console.log('requesting for host')
-            let response = await fetch(
-              'http://103.108.144.246/pinacallapi/process.php',
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        mobile: mobile,
-                        action: 'getnotifyForCall'
-                    }),
-                }
-            );
+  //         if(service_type == 'host'){
+  //           console.log('requesting for host')
+  //           let response = await fetch(
+  //             'http://103.108.144.246/pinacallapi/process.php',
+  //               {
+  //                   method: 'POST',
+  //                   headers: {
+  //                       'Content-Type': 'application/json',
+  //                   },
+  //                   body: JSON.stringify({
+  //                       mobile: mobile,
+  //                       action: 'getnotifyForCall'
+  //                   }),
+  //               }
+  //           );
 
-            let responseJson = await response.json();
-            console.log('response',responseJson);
-            if(responseJson.length > 0){
-              if(responseJson[0].status == "0" && responseJson[0].sender_mobile !== ''){
-                setIsActive(false);
-                setCall(responseJson[0].id)
-                setSender(responseJson[0].sender_mobile)
-                setIsjoin(1)
-                console.log('guest ', responseJson[0].id)
-              }
-            }
-            else{
-              console.log('no call activated')
-            }
-          }
-          else{
-            //setIsActive(false)
-          }
+  //           let responseJson = await response.json();
+  //           console.log('response',responseJson);
+  //           if(responseJson.length > 0){
+  //             if(responseJson[0].status == "0" && responseJson[0].sender_mobile !== ''){
+  //               setIsActive(false);
+  //               setCall(responseJson[0].id)
+  //               setSender(responseJson[0].sender_mobile)
+  //               setIsjoin(1)
+  //               console.log('guest ', responseJson[0].id)
+  //             }
+  //           }
+  //           else{
+  //             console.log('no call activated')
+  //           }
+  //         }
+  //         else{
+  //           //setIsActive(false)
+  //         }
 
 
 
-          console.log('counter -- ', counter)
-        }
+  //         console.log('counter -- ', counter)
+  //       }
 
-        setCounter(counter => counter + 1);
-      }, 3000)
-    }
+  //       setCounter(counter => counter + 1);
+  //     }, 3000)
+  //   }
 
-    return () => clearInterval(intervalId);
-  }, [isActive, counter])
+  //   return () => clearInterval(intervalId);
+  // }, [isActive, counter])
   //const [mobile, setMobile] = useState('234324')
 
   const getMobile = async() => {
@@ -105,7 +106,7 @@ export default function HomeScreen ({navigation}) {
   const joinCall = async() => {
 
     let response = await fetch(
-      'http://103.108.144.246/pinacallapi/process.php',
+      BASE_URL,
         {
             method: 'POST',
             headers: {

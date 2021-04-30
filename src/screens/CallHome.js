@@ -3,6 +3,7 @@ import { View, Text,Image,  Button, TouchableOpacity,StyleSheet, Alert } from 'r
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { COLORS } from '../assets/utils/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import BASE_URL from '../assets/utils/url';
 
 const CallHome = ({navigation}) => {
     const [msg, setMsg] = React.useState('Call is not initiated....')
@@ -37,7 +38,7 @@ const CallHome = ({navigation}) => {
 
           if(service_type == 'guest'){
             let response = await fetch(
-              'http://103.108.144.246/pinacallapi/process.php',
+              BASE_URL,
                 {
                     method: 'POST',
                     headers: {
@@ -95,7 +96,7 @@ const CallHome = ({navigation}) => {
         if(isclick == 0){
           setMsg('Initiating Video Call.....')
           let response = await fetch(
-            'http://103.108.144.246/pinacallapi/process.php',
+            BASE_URL,
               {
                   method: 'POST',
                   headers: {

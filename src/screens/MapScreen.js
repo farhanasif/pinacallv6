@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, Dimensions, TouchableOpacity, Image } from 'rea
 import * as Location from 'expo-location';
 import pin_green from '../assets/images/pin-green-icon.png';
 import pin_red from '../assets/images/pin-red-icon.png';
+import BASE_URL from '../assets/utils/url';
 
 
 export default function MapScreen ({ navigation }) {
@@ -15,7 +16,7 @@ export default function MapScreen ({ navigation }) {
   const _fetchData = async() => {
     try {
         let response = await fetch(
-            'http://103.108.144.246/pinacallapi/process.php',
+            BASE_URL,
             {
                 method: 'POST',
                 headers: {

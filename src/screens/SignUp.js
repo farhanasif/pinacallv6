@@ -9,6 +9,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS } from '../assets/utils/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import BASE_URL from '../assets/utils/url';
+
 const screen = Dimensions.get("screen");
 const WIDTH = screen.width;
 
@@ -40,7 +42,7 @@ const SignUp = ({ navigation }) => {
     else{
       //fetch signup data
       let response = await fetch(
-        'http://103.108.144.246/pinacallapi/process.php',
+        BASE_URL,
           {
               method: 'POST',
               headers: {
