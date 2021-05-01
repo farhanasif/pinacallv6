@@ -39,8 +39,8 @@ const Signin = ({ navigation }) => {
 
   const _signin = async() => {
     //alert('success')
-    if(mobile == ''){
-      alert('enter mobile');
+    if(mobile == '' || password == ''){
+      alert('enter mobile & password together..');
     }
     else{
       //fetch data

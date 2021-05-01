@@ -57,7 +57,12 @@ const SignUp = ({ navigation }) => {
                   action: 'signup'
               }),
           }
-      );
+      )
+      .catch((error) => {
+        console.error(error);
+      });
+
+
       let responseJson = await response.json();
       console.log('response',responseJson)
       //if success login user
