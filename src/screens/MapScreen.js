@@ -82,7 +82,7 @@ export default function MapScreen ({ navigation }) {
     }
 
     const _checkNearByData = async() =>{
-      alert(region.longitude);
+      //alert(region.longitude);
       if(region){
         await _fetchData();
       }
