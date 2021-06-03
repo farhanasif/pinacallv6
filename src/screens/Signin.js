@@ -44,7 +44,7 @@ const Signin = ({ navigation }) => {
     }
     else{
       //fetch data
-      let otp_value =  await Math.floor(1000 + Math.random() * 9000);
+      let otp_value = '1234'; // await Math.floor(1000 + Math.random() * 9000);
       let otp_message =  await otp_value+" is your one-time password for Pinacall."
       console.log(otp_message)
 
