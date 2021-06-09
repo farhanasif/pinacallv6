@@ -8,7 +8,8 @@ class VideoCall extends React.Component {
     super(props);
     this.state = {
       seconds: 0,
-      mobile: ''
+      mobile: '',
+      callid: 0
     }
     this.onConferenceTerminated = this.onConferenceTerminated.bind(this);
     this.onConferenceJoined = this.onConferenceJoined.bind(this);

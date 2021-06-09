@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
 import { View, Text,Image,  Button, TouchableOpacity,StyleSheet, Alert } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { COLORS } from '../assets/utils/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BASE_URL from '../assets/utils/url';
+import { call } from 'react-native-reanimated';
+import { CommonActions } from '@react-navigation/native';
 
 const CallHome = ({navigation}) => {
     const [msg, setMsg] = React.useState('Call is not initiated....')
@@ -13,7 +15,20 @@ const CallHome = ({navigation}) => {
     const [isActive, setIsActive] = useState(false);
     const [service_type, setService] = useState('guest');
     const [isclick, setIsClick] = useState(0);
+    const [callid, setCallid] = useState(0);
 
+    useLayoutEffect(() => {
+      navigation.setOptions({
+        headerRight: () => (
+          <TouchableOpacity
+            style={{paddingRight: 20}}
+            onPress={() => console.log('here')}
+          >
+            <FontAwesome name="bars" size={23} color={COLORS.pinacall_pink} />
+          </TouchableOpacity>
+        ),
+      });
+    }, [navigation]);
 
     useEffect(() => {
         const getdata = async() => {
@@ -61,7 +76,9 @@ const CallHome = ({navigation}) => {
                 setMsg('One host joined the call. Initiating video call')
                 navigation.navigate('VideoCall', {
                   mobile: mobile,
+                  callid: callid
                 });
+                setMsg('')
                 return () => clearInterval(intervalId);
               }
             }
@@ -109,6 +126,8 @@ const CallHome = ({navigation}) => {
               }
           );
           let responseJson = await response.json();
+          let last = responseJson.callid;
+          setCallid(last)
           console.log('response',responseJson)
           setMsg('Call Initiated. Waiting for host to connect...')
 
@@ -117,6 +136,13 @@ const CallHome = ({navigation}) => {
         }
 
     }
+
+    const _callReturn = () => {
+      console.log('clicked')
+      navigation.navigate('Home');
+    }
+
+
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <View style={{
@@ -145,6 +171,13 @@ const CallHome = ({navigation}) => {
 
             <Text style={{fontWeight: '700', fontSize: 17, color: COLORS.blue}}>{msg}</Text>
             <Text style={{fontWeight: '700', fontSize: 17, color: COLORS.blue}}>{update}</Text>
+            <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                    onPress={() => _callReturn()}
+                    style={styles.button2}>
+                    <Text style={styles.buttonItem}>Return</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 }
@@ -173,6 +206,16 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'space-around',
       backgroundColor: 'rgba(246,12,93,0.7)',
+      paddingHorizontal: 18,
+      paddingVertical: 12,
+      borderRadius: 20,
+    },
+
+    button2: {
+      width: 150,
+      alignItems: 'center',
+      justifyContent: 'space-around',
+      backgroundColor: '#E7412B',
       paddingHorizontal: 18,
       paddingVertical: 12,
       borderRadius: 20,

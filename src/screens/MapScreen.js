@@ -14,6 +14,7 @@ export default function MapScreen ({ navigation }) {
   const [region, setRegion] = useState(null);
   const [nearby, setNearbyofferslist] = useState(null);
   const [loc, setLoc] = useState('')
+  const [searchfound, setSearchFound] = useState(1);
 
   const _fetchData = async() => {
     try {
@@ -33,7 +34,16 @@ export default function MapScreen ({ navigation }) {
         );
 
         let responseJson = await response.json();
+        console.log('search')
         console.log(responseJson);
+
+        if(responseJson.length > 0){
+          setSearchFound(1)
+        }
+        else{
+          setSearchFound(0)
+        }
+
         setNearbyofferslist(responseJson);
     }
     catch (error) {
@@ -90,7 +100,13 @@ export default function MapScreen ({ navigation }) {
     }
 
     const _callUsers = () => {
-      navigation.navigate('CallHome')
+      if(searchfound > 0){
+        navigation.navigate('CallHome')
+      }
+      else{
+        alert('No host found in this location')
+      }
+
     }
 
     return (
@@ -139,7 +155,7 @@ export default function MapScreen ({ navigation }) {
             backgroundColor: 'white',
             width: '85%',
             flexDirection:'row',
-            }}>
+            borderRadius: 0,}}>
           {/* <TextInput
             style={{height: 40, width: '70%', marginLeft: 5}}
             placeholder="Type here for location!"
@@ -177,6 +193,7 @@ export default function MapScreen ({ navigation }) {
             query={{
               key: 'AIzaSyDsG1DC2rI5wWiJOdglLhldqYDKlDVnS_s',
               language: 'en',
+              components: 'country:bd',
             }}
           />
         </View>
