@@ -16,6 +16,8 @@ import CallHome from './src/screens/CallHome'
 import VideoCall from './src/screens/VideoCall'
 import OtpScreen from './src/screens/OtpScreen'
 
+import MapText from './src/screens/MapText'
+
 import { DrawerContent } from './src/components/DrawerContent';
 
 const Drawer = createDrawerNavigator();
@@ -28,6 +30,7 @@ function rootDrawer(){
       <Drawer.Screen name="Map" component={MapScreen} />
       <Drawer.Screen name="CallHome" component={CallHome} />
       <Drawer.Screen name="VideoCall" component={VideoCall} />
+      <Drawer.Screen name="MapText" component={MapText} />
     </Drawer.Navigator>
   )
 }

@@ -9,17 +9,32 @@ const windowWidth = Dimensions.get('window').width;
 function Button(props) {
     const { iconName, buttonTitle, navigation } = props;
   return (
-      <TouchableOpacity onPress={() => {
-        navigation.navigate('Map');
-      }}>
-          <View style={styles.container}>
-            <View style={styles.box}>
-            <FontAwesome5 name={iconName} size={20} color={COLORS.pinacall_pink_right} />
-            <Text style={styles.buttonText}>{buttonTitle}</Text>
+    buttonTitle === 'Window Shopping' ?
+      (
+        <TouchableOpacity onPress={() => {
+            navigation.navigate('MapText');
+        }}>
+            <View style={styles.container}>
+                <View style={styles.box}>
+                <FontAwesome5 name={iconName} size={20} color={COLORS.pinacall_pink_right} />
+                <Text style={styles.buttonText}>{buttonTitle}</Text>
+                </View>
             </View>
-        </View>
-      </TouchableOpacity>
-
+        </TouchableOpacity>
+      )
+      :
+      (
+        <TouchableOpacity onPress={() => {
+            navigation.navigate('Map');
+          }}>
+              <View style={styles.container}>
+                <View style={styles.box}>
+                <FontAwesome5 name={iconName} size={20} color={COLORS.pinacall_pink_right} />
+                <Text style={styles.buttonText}>{buttonTitle}</Text>
+                </View>
+            </View>
+          </TouchableOpacity>
+      )
   );
 }
 
