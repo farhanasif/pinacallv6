@@ -14,7 +14,7 @@ export default function MapScreen ({ navigation }) {
   const [region, setRegion] = useState(null);
   const [nearby, setNearbyofferslist] = useState(null);
   const [loc, setLoc] = useState('')
-  const [searchfound, setSearchFound] = useState(1);
+  const [searchfound, setSearchFound] = useState(0);
 
   const _fetchData = async() => {
     try {

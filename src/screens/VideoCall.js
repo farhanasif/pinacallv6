@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Alert } from 'react-native';
 import JitsiMeet, { JitsiMeetView } from 'react-native-jitsi-meet';
 import BASE_URL from '../assets/utils/url';
 import { CommonActions } from '@react-navigation/native';
+import { Snackbar } from 'react-native-paper';
 
 class VideoCall extends React.Component {
   constructor(props) {
@@ -10,7 +11,9 @@ class VideoCall extends React.Component {
     this.state = {
       seconds: 0,
       mobile: '',
-      callid: 0
+      callid: 0,
+      visible: false,
+      totalsec: 0
     }
     this.onConferenceTerminated = this.onConferenceTerminated.bind(this);
     this.onConferenceJoined = this.onConferenceJoined.bind(this);
@@ -35,6 +38,8 @@ class VideoCall extends React.Component {
     /* Conference terminated event */
     clearInterval(this._interval);
     JitsiMeet.endCall();
+    let totalsec = this.state.seconds;
+    this.setState({totalsec: totalsec})
     console.log('total call time: ', this.state.seconds);
     //alert('total call time: ', this.state.seconds);
 
@@ -61,6 +66,7 @@ class VideoCall extends React.Component {
     }
 
     this.setState({seconds: 0})
+    this.onToggleSnackBar(totalsec)
     const {navigation} = this.props;
     navigation.reset({
       index: 0,
@@ -83,6 +89,18 @@ class VideoCall extends React.Component {
     /* Conference will join event */
   }
 
+  onToggleSnackBar = (totalsec) => {
+    //alert('Call Ended. Total Duration: '+totalsec+' sec.')
+    Alert.alert(
+      "PINACALL",
+      'Call Ended. Total Duration: '+totalsec+' sec.',
+      [
+        { text: "OK", onPress: () => console.log("OK Pressed") }
+      ]
+    );
+    this.setState({visible:true})
+  }
+
   render() {
     return (
       <View style={{ backgroundColor: 'black',flex: 1 }}>
@@ -95,6 +113,11 @@ class VideoCall extends React.Component {
           onConferenceWillJoin={this.onConferenceWillJoin}
           style={{ flex: 1, height: '100%', width: '100%' }}
         />
+        <Snackbar
+          visible={this.state.visible}
+        >
+        Call Ended. Duration: {this.state.totalsec}
+      </Snackbar>
       </View>
     );
   }
