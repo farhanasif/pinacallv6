@@ -49,7 +49,7 @@ const CallHome = ({navigation}) => {
           return () => clearInterval(intervalId);
         }
         else{
-          console.log('guest',counter)
+          console.log('guest',callid)
 
           if(service_type == 'guest'){
             let response = await fetch(
@@ -61,6 +61,7 @@ const CallHome = ({navigation}) => {
                     },
                     body: JSON.stringify({
                         mobile: mobile,
+                        callid: callid,
                         action: 'getnotifyForCallGuest'
                     }),
                 }
@@ -74,6 +75,8 @@ const CallHome = ({navigation}) => {
                 console.log('setting inactive to false')
                 setIsActive(false)
                 setMsg('One host joined the call. Initiating video call')
+                console.log({callid})
+                setIsClick(0);
                 navigation.navigate('VideoCall', {
                   mobile: mobile,
                   callid: callid
@@ -108,7 +111,7 @@ const CallHome = ({navigation}) => {
     }
 
     const _callVideo = async() => {
-
+        console.log('video calling request...')
         setIsClick(1);
         if(isclick == 0){
           setMsg('Initiating Video Call.....')
@@ -126,7 +129,8 @@ const CallHome = ({navigation}) => {
               }
           );
           let responseJson = await response.json();
-          let last = responseJson.callid;
+          let last = responseJson[0].callid;
+          console.log(responseJson[0].callid)
           setCallid(last)
           console.log('response',responseJson)
           setMsg('Call Initiated. Waiting for host to connect...')
@@ -139,6 +143,9 @@ const CallHome = ({navigation}) => {
 
     const _callReturn = () => {
       console.log('clicked')
+      setIsActive(false);
+      setIsClick(0);
+      setMsg('')
       navigation.navigate('Home');
     }
 
@@ -171,6 +178,7 @@ const CallHome = ({navigation}) => {
 
             <Text style={{fontWeight: '700', fontSize: 17, color: COLORS.blue}}>{msg}</Text>
             <Text style={{fontWeight: '700', fontSize: 17, color: COLORS.blue}}>{update}</Text>
+
             <View style={styles.buttonContainer}>
                 <TouchableOpacity
                     onPress={() => _callReturn()}

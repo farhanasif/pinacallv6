@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import JitsiMeet, { JitsiMeetView } from 'react-native-jitsi-meet';
 import BASE_URL from '../assets/utils/url';
+import { CommonActions } from '@react-navigation/native';
 
 class VideoCall extends React.Component {
   constructor(props) {
@@ -23,8 +24,9 @@ class VideoCall extends React.Component {
       const userInfo = { displayName: 'Farhan', email: 'test@example.com', avatar: 'https:/gravatar.com/avatar/abc123' };
       JitsiMeet.call(url, userInfo);
 
-      console.log(this.props.route.params.mobile);
+      console.log(this.props.route.params.callid);
       this.setState({mobile : this.props.route.params.mobile})
+      this.setState({callid : this.props.route.params.callid})
       /* You can also use JitsiMeet.audioCall(url) for audio only call */
       /* You can programmatically end the call with JitsiMeet.endCall() */
   }
@@ -32,7 +34,10 @@ class VideoCall extends React.Component {
   onConferenceTerminated(nativeEvent) {
     /* Conference terminated event */
     clearInterval(this._interval);
-    alert('total call time: ', this.state.seconds);
+    JitsiMeet.endCall();
+    console.log('total call time: ', this.state.seconds);
+    //alert('total call time: ', this.state.seconds);
+
     try {
         let response = fetch(
             BASE_URL,
@@ -44,6 +49,7 @@ class VideoCall extends React.Component {
                 body: JSON.stringify({
                     seconds: this.state.seconds,
                     mobile: this.state.mobile,
+                    callid: this.state.callid,
                     action: 'closeUserRequest'
                 }),
             }
@@ -53,8 +59,13 @@ class VideoCall extends React.Component {
     catch (error) {
         alert('An error occured during api data fetch: '+error);
     }
+
+    this.setState({seconds: 0})
     const {navigation} = this.props;
-    navigation.navigate('Home')
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'Home'}],
+    });
   }
 
   onConferenceJoined(nativeEvent) {

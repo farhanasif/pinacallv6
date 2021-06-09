@@ -150,12 +150,12 @@ export default function MapScreen ({ navigation }) {
         <View style={{
             position: 'absolute',
             top: 10,
-            left: 20,
+            left: 10,
             height: 40,
             backgroundColor: 'white',
-            width: '85%',
+            width: '95%',
             flexDirection:'row',
-            borderRadius: 0,}}>
+            borderRadius: 20,}}>
           {/* <TextInput
             style={{height: 40, width: '70%', marginLeft: 5}}
             placeholder="Type here for location!"
@@ -174,11 +174,8 @@ export default function MapScreen ({ navigation }) {
             returnKeyType={'default'}
             fetchDetails={true}
             styles={{
-              textInputContainer: {
-                backgroundColor: 'rgba(246,12,93,0.7)',
-              },
               textInput: {
-                height: 38,
+                height: 39,
                 color: 'rgba(246,12,93,0.7)',
                 fontSize: 16,
               },
@@ -239,8 +236,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(246,12,93,0.7)',
     paddingHorizontal: 18,
     paddingVertical: 12,
-    borderRadius: 20,
-
+    borderRadius: 20
   },
   button2: {
     width: '25%',
