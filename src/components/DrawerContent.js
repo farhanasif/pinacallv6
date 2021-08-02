@@ -87,7 +87,7 @@ export function DrawerContent(props) {
                                 )}
                                 label="My Billing"
                                 labelStyle={{color: COLORS.placeholder, fontWeight: '700'}}
-                                onPress={() => {props.navigation.navigate('Query')}}
+                                onPress={() => {props.navigation.navigate('MyBilling')}}
                             />
                             <DrawerItem
                                 icon={({color, size}) => (
@@ -109,9 +109,9 @@ export function DrawerContent(props) {
                                     size={size}
                                     />
                                 )}
-                                label="Support"
+                                label="Call Log"
                                 labelStyle={{color: COLORS.placeholder, fontWeight: '700'}}
-                                onPress={() => {props.navigation.navigate('Query')}}
+                                onPress={() => {props.navigation.navigate('CallLog')}}
                             />
                         </Drawer.Section>
                         <Drawer.Section title="Preferences" style={{color: COLORS.placeholder}}>

@@ -15,6 +15,8 @@ import SplashScreen from './src/screens/SplashScreen'
 import CallHome from './src/screens/CallHome'
 import VideoCall from './src/screens/VideoCall'
 import OtpScreen from './src/screens/OtpScreen'
+import CallLog from './src/screens/CallLog'
+import MyBilling from './src/screens/MyBilling'
 
 import MapText from './src/screens/MapText'
 
@@ -31,6 +33,8 @@ function rootDrawer(){
       <Drawer.Screen name="CallHome" component={CallHome} />
       <Drawer.Screen name="VideoCall" component={VideoCall} />
       <Drawer.Screen name="MapText" component={MapText} />
+      <Drawer.Screen name="CallLog" component={CallLog} />
+      <Drawer.Screen name="MyBilling" component={MyBilling} />
     </Drawer.Navigator>
   )
 }
