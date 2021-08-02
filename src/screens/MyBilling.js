@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MyBilling = props => {
 
@@ -8,8 +9,9 @@ const MyBilling = props => {
     useEffect(() => {
 
         const fetchData = async () => {
-
-            fetch("http://103.108.144.246/pinacallapi/process.php", {
+            const value = await AsyncStorage.getItem('@mobile')
+            if(value !== ''){
+                fetch("http://103.108.144.246/pinacallapi/process.php", {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -17,13 +19,15 @@ const MyBilling = props => {
                 },
                 body: JSON.stringify({
                     action: "getGuestCallDetails",
-                    mobile: "01717428261"})
+                    mobile: value})
                 })
                 .then(response => response.json())
                 .then(response => {
                     setGuestReportData(response);
                 })
                 .catch(error => console.log('error', error));
+            }
+
         };
         fetchData();
     },[]);

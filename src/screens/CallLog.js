@@ -3,39 +3,43 @@ import React, { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const CallLog = props => {
 
     const [guestCallLogData, SetGuestCallLogData] = useState([]);
-    const [guestInfo, setGuestInfo] = useState({
-        "action": "getGuestCallLog",
-        "mobile": "01717428261"
-    });
+    const [mobile, setMobile] = useState('')
 
     useEffect(() => {
+        const getdata = async() => {
+            const value = await AsyncStorage.getItem('@mobile')
+            setMobile(value)
 
-        const fetchData = async () => {
-
-            fetch("http://103.108.144.246/pinacallapi/process.php", {
+            if(value !== ''){
+                fetch("http://103.108.144.246/pinacallapi/process.php", {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                        action: guestInfo.action,
-                        mobile: guestInfo.mobile
+                        action: "getGuestCallLog",
+                        mobile: value
                     })
                 })
                 .then(response => response.json())
                 .then(response => {
-                    let callDate = response.filter((log)=> (log.sender_mobile === guestInfo.mobile))
+                    let callDate = response.filter((log)=> (log.sender_mobile === value))
                     SetGuestCallLogData(callDate);
                 })
                 .catch(error => console.log('error', error));
-        };
-        fetchData();
-    },[]);
+            }
+        }
+
+        getdata()
+    }, [])
+
 
     return (
         <View style={styles.container}>
