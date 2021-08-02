@@ -21,6 +21,7 @@ DerivedData
 *.ipa
 *.xcuserstate
 
+
 # Android/IntelliJ
 #
 build/
@@ -29,6 +30,7 @@ build/
 local.properties
 *.iml
 android/java_pid5426.hprof
+*.hprof
 
 # node.js
 #
