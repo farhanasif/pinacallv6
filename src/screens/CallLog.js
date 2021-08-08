@@ -31,7 +31,7 @@ const CallLog = props => {
                 .then(response => response.json())
                 .then(response => {
                     let callDate = response.filter((log)=> (log.sender_mobile === value))
-                    SetGuestCallLogData(callDate);
+                    SetGuestCallLogData(response);
                 })
                 .catch(error => console.log('error', error));
             }
