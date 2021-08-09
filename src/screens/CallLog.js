@@ -87,7 +87,7 @@ const CallLog = props => {
                     {   guestCallLogData && guestCallLogData.length> 0 ?
                         guestCallLogData.map((items)=> (
 
-                            <View style={styles.callListCardWraper}>
+                            <View style={styles.callListCardWraper} key={items.id}>
                                 <View style={{flexDirection:'row'}}>
                                     <View style={{paddingHorizontal: 10, justifyContent:'center'}}>
                                     <Feather
